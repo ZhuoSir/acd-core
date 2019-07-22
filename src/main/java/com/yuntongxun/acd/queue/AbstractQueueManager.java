@@ -9,6 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractQueueManager extends Thread implements QueueManager {
 
+    public AbstractQueueManager() {
+        super("LineThread");
+    }
+
     private AcdQueue acdQueue;
 
     private QueueProxy queueProxy;
@@ -71,8 +75,6 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
     }
 
     public void processFinish(LineElement element) {
-        acdQueue.processingQueue.remove(element);
-        acdQueue.getProcessingMap().remove(element.getId());
     }
 
     @Override
@@ -106,14 +108,8 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
                 }
 
                 if (null != element) {
-                    acdQueue.addProcessing(element);
-                } else {
-                    // 防止并发太高导致 processing队列有残余
-                    element = acdQueue.pollProcessing();
-                }
-
-                if (null != element) {
                     if (workAfterLine(element)) {
+//                        acdQueue.addProcessing(element);
                         if (notifySwitch) {
                             queueNotify();
                         }

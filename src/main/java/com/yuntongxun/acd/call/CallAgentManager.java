@@ -14,25 +14,31 @@ public class CallAgentManager {
 
     public String createCallTask(ConferenceRoom conferenceRoom, CallAgentAction callAgentAction, CallAgentCallBack callAgentCallBack) {
         CallAgentTask callAgentTask = new CallAgentTask(conferenceRoom, callAgentAction, callAgentCallBack);
-        callAgentTaskPools.put(callAgentTask.getAgentId(), callAgentTask);
+        callAgentTaskPools.put(callAgentTask.getCustomerId(), callAgentTask);
 
         callTaskPools.submit(callAgentTask);
         return callAgentTask.getAgentId();
     }
 
-    public void agentAgreeCall(String agentId) {
-        CallAgentTask task = callAgentTaskPools.remove(agentId);
+    public void agentAgreeCall(String customerId) {
+        if (customerId == null) return;
+        CallAgentTask task = callAgentTaskPools.remove(customerId);
         if (task != null) {
             CallAgentCallBack callAgentCallBack = task.getCallAgentCallBack();
             callAgentCallBack.agreeCall(task.getConferenceRoom());
+        } else {
+            System.out.println(" 没有CallAgentTask... ");
         }
     }
 
-    public void agentRejectCall(String agentId) {
-        CallAgentTask task = callAgentTaskPools.remove(agentId);
+    public void agentRejectCall(String customerId) {
+        if (customerId == null) return;
+        CallAgentTask task = callAgentTaskPools.remove(customerId);
         if (task != null) {
             CallAgentCallBack callAgentCallBack = task.getCallAgentCallBack();
             callAgentCallBack.rejectCall(task.getConferenceRoom());
+        } else {
+            System.out.println(" 没有CallAgentTask... ");
         }
     }
 }

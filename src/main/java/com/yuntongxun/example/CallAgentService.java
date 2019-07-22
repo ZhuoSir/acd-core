@@ -5,10 +5,9 @@ import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.CallAgentCallBackProxy;
 import com.yuntongxun.acd.queue.bean.Customer;
 
-import java.util.List;
+import java.util.*;
 
 public class CallAgentService extends AbstractCallAgentProxy implements CallAgentCallBackProxy {
-
 
     public CallAgentService(List<Agent> agents) {
         super(agents);
@@ -17,34 +16,43 @@ public class CallAgentService extends AbstractCallAgentProxy implements CallAgen
     @Override
     public boolean callAgent(Customer customer, Agent agent) {
         System.out.println("customer" + customer + " calling " + agent);
+
+        int a = new Random().nextInt(10);
+        if (a % 3 != 0) {
+            agree(customer.getId());
+        } else {
+            reject(customer.getId());
+        }
+//        agree(customer.getId());
+        callFinish(agent);
         return true;
     }
 
-    public void agree(String agenitId) {
+    public void agree(String customerId) {
 //        try {
 //            Thread.sleep(1000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        callAgentManager.agentAgreeCall(agenitId);
+        callAgentManager.agentAgreeCall(customerId);
     }
 
-    public void reject(String agentId) {
+    public void reject(String customerId) {
 //        try {
 //            Thread.sleep(1000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        callAgentManager.agentRejectCall(agentId);
+        callAgentManager.agentRejectCall(customerId);
     }
 
     @Override
     public void agreeCall(Customer customer, Agent agent) {
-        System.out.println("agent : " + agent + " agree call from " + customer);
+            System.out.println("agent : " + agent + " agree call from " + customer);
     }
 
     @Override
     public void rejectCall(Customer customer, Agent agent) {
-        System.out.println("agent : " + agent + " reject call from " + customer);
+            System.out.println("agent : " + agent + " reject call from " + customer);
     }
 }

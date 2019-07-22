@@ -53,6 +53,10 @@ public class CallAgentTask implements Runnable {
         return this.conferenceRoom.getAgent().getAgentId();
     }
 
+    public String getCustomerId() {
+        return this.conferenceRoom.getCustomer().getId();
+    }
+
     public int getStatus() {
         return status;
     }
@@ -67,6 +71,7 @@ public class CallAgentTask implements Runnable {
 
     @Override
     public void run() {
+        Thread.currentThread().setName("CallAgentTask[" + conferenceRoom.getCustomer().getId() + "," + conferenceRoom.getAgent().getAgentId() + "]");
         taskStartTime = new Date();
         boolean r = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
 //        if (r) {
