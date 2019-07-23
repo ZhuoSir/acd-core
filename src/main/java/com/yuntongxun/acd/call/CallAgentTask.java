@@ -9,6 +9,7 @@ public class CallAgentTask implements Runnable {
     private ConferenceRoom conferenceRoom;
     private CallAgentAction callAgentAction;
     private CallAgentCallBack callAgentCallBack;
+    private CallAgentResultHandle callAgentResultHandle;
 
     private Date taskStartTime;
     private Date taskEndTime;
@@ -19,10 +20,11 @@ public class CallAgentTask implements Runnable {
     public static int FAILED = 0;
     public static int NONEXECUTED = -1;
 
-    public CallAgentTask(ConferenceRoom conferenceRoom, CallAgentAction callAgentAction, CallAgentCallBack callAgentCallBack) {
+    public CallAgentTask(ConferenceRoom conferenceRoom, CallAgentAction callAgentAction, CallAgentCallBack callAgentCallBack, CallAgentResultHandle callAgentResultHandle) {
         this.conferenceRoom = conferenceRoom;
         this.callAgentAction = callAgentAction;
         this.callAgentCallBack = callAgentCallBack;
+        this.callAgentResultHandle = callAgentResultHandle;
     }
 
     public ConferenceRoom getConferenceRoom() {
@@ -73,14 +75,14 @@ public class CallAgentTask implements Runnable {
     public void run() {
         Thread.currentThread().setName("CallAgentTask[" + conferenceRoom.getCustomer().getId() + "," + conferenceRoom.getAgent().getAgentId() + "]");
         taskStartTime = new Date();
-        boolean r = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
-//        if (r) {
-//            callAgentCallBack.callSuccess(conferenceRoom);
-//            status = SUCCESS;
-//        } else {
-//            callAgentCallBack.callFail(conferenceRoom);
-//            status = FAILED;
-//        }
+        CallResult callResult = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
+        if (callResult.isSuccess()) {
+            callAgentResultHandle.callSuccess(conferenceRoom);
+            status = SUCCESS;
+        } else {
+            callAgentResultHandle.callFailed(conferenceRoom);
+            status = FAILED;
+        }
         taskEndTime = new Date();
     }
 }

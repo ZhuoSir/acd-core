@@ -12,8 +12,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class AgentManager {
 
-    private int index;
-
     protected BlockingQueue<Agent> agentQueue;
 
     protected Map<String, ConferenceRoom> conferenceRoomPool;
@@ -46,7 +44,6 @@ public class AgentManager {
             agent.setStatus(Agent.BUSY);
             ConferenceRoom conferenceRoom = new ConferenceRoom(agent, customer);
             conferenceRoomPool.put(customer.getId(), conferenceRoom);
-            index++;
             return conferenceRoom;
         } catch (InterruptedException e) {
             e.printStackTrace();

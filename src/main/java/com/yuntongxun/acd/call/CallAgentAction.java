@@ -5,7 +5,7 @@ import com.yuntongxun.acd.queue.bean.Customer;
 
 public interface CallAgentAction {
 
-    boolean callAgent(Customer customer, Agent agent);
+    CallResult callAgent(Customer customer, Agent agent);
 
     void callFinish(Agent agent);
 

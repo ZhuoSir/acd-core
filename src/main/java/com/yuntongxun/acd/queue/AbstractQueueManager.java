@@ -17,16 +17,11 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
 
     private QueueProxy queueProxy;
 
-    private boolean running;
     private boolean notifySwitch = false;
     private boolean queueSwitch = true;
 
     public void setQueueSwitch(boolean queueSwitch) {
         this.queueSwitch = queueSwitch;
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
     }
 
     public void notifySwitchOn() {
@@ -91,8 +86,6 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
     @Override
     public void lineProcess() {
         try {
-            running = true;
-
             for (; queueSwitch ;) {
                 AcdQueue acdQueue = getAcdQueue();
                 BlockingQueue<LineElement> waitingQueue  = acdQueue.getWaitingQueue();
@@ -117,7 +110,6 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
                 }
 
             }
-            running = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
