@@ -2,6 +2,8 @@ package com.yuntongxun.acd.call.Agent;
 
 import com.yuntongxun.acd.queue.bean.Customer;
 
+import java.util.Date;
+
 public class ConferenceRoom {
 
     private Agent agent;
@@ -12,6 +14,8 @@ public class ConferenceRoom {
 
     // 1 call成功 0 call 失败
     private int callStatus;
+
+    private Date callDate;
 
     public ConferenceRoom() {
     }
@@ -43,5 +47,13 @@ public class ConferenceRoom {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public void setCallDate(Date callDate) {
+        this.callDate = callDate;
+    }
+
+    public Date getCallDate() {
+        return callDate;
     }
 }

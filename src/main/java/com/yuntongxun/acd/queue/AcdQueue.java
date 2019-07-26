@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.queue.bean.LineElement;
+import com.yuntongxun.acd.queue.bean.QueueInfo;
 
 import java.util.Map;
 import java.util.Queue;
@@ -13,10 +14,8 @@ public class AcdQueue {
 
     // 等待队列
     protected BlockingQueue<LineElement> waitingQueue;
-
     // 处理失败队列
     protected Queue<LineElement> processFailedQueue;
-
     // 优先队列
     protected Queue<LineElement> priorityQueue;
 
@@ -50,6 +49,18 @@ public class AcdQueue {
         return priorityQueue;
     }
 
+    public int waitingSize() {
+        return waitingQueue.size();
+    }
+
+    public int prioritySize() {
+        return priorityQueue.size();
+    }
+
+    public int failedSize() {
+        return processFailedQueue.size();
+    }
+
     @Override
     public String toString() {
         return "AcdQueue{" +
@@ -62,5 +73,11 @@ public class AcdQueue {
     public String detail() {
         String string = "waiting : " + waitingQueue.size() + " priority : " + priorityQueue.size() + " processFailed : " + processFailedQueue.size();
         return string;
+    }
+
+    public QueueInfo getQueueInfo() {
+        QueueInfo queueInfo = new QueueInfo();
+        queueInfo.setWaitingCount(waitingQueue.size());
+        return queueInfo;
     }
 }

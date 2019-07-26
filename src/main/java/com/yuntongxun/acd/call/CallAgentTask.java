@@ -75,6 +75,7 @@ public class CallAgentTask implements Runnable {
     public void run() {
         Thread.currentThread().setName("CallAgentTask[" + conferenceRoom.getCustomer().getId() + "," + conferenceRoom.getAgent().getAgentId() + "]");
         taskStartTime = new Date();
+        conferenceRoom.setCallDate(taskStartTime);
         CallResult callResult = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
         if (callResult.isSuccess()) {
             callAgentResultHandle.callSuccess(conferenceRoom);

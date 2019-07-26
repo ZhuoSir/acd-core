@@ -1,12 +1,13 @@
 package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.queue.bean.LineElement;
+import com.yuntongxun.acd.queue.bean.QueueInfo;
 
 public interface QueueManager {
 
     AcdQueue getAcdQueue();
 
-    void line(LineElement element);
+    QueueInfo line(LineElement element);
 
     void linePriority(LineElement element);
 

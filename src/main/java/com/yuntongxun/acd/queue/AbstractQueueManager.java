@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.queue.bean.LineElement;
+import com.yuntongxun.acd.queue.bean.QueueInfo;
 
 import java.util.Map;
 import java.util.Queue;
@@ -18,11 +19,6 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
     private QueueProxy queueProxy;
 
     private boolean notifySwitch = false;
-    private boolean queueSwitch = true;
-
-    public void setQueueSwitch(boolean queueSwitch) {
-        this.queueSwitch = queueSwitch;
-    }
 
     public void notifySwitchOn() {
         this.notifySwitch = true;
@@ -46,27 +42,19 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
     }
 
     @Override
-    public void line(LineElement element) {
+    public QueueInfo line(LineElement element) {
         acdQueue.add(element);
-        if (notifySwitch) {
-            queueNotify();
-        }
+        return acdQueue.getQueueInfo();
     }
 
     @Override
     public void linePriority(LineElement element) {
         acdQueue.addPriority(element);
-        if (notifySwitch) {
-            queueNotify();
-        }
     }
 
     @Override
     public void lineFailed(LineElement element) {
         acdQueue.addProcessFailed(element);
-        if (notifySwitch) {
-            queueNotify();
-        }
     }
 
     public void processFinish(LineElement element) {
@@ -86,7 +74,7 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
     @Override
     public void lineProcess() {
         try {
-            for (; queueSwitch ;) {
+            for (;;) {
                 AcdQueue acdQueue = getAcdQueue();
                 BlockingQueue<LineElement> waitingQueue  = acdQueue.getWaitingQueue();
                 Queue<LineElement> priorityQueue         = acdQueue.getPriorityQueue();
@@ -102,13 +90,11 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
 
                 if (null != element) {
                     if (workAfterLine(element)) {
-//                        acdQueue.addProcessing(element);
                         if (notifySwitch) {
                             queueNotify();
                         }
                     }
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
