@@ -4,6 +4,7 @@ import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.queue.AcdQueue;
 import com.yuntongxun.acd.queue.CustomerQueueManager;
 import com.yuntongxun.acd.queue.bean.Customer;
+import com.yuntongxun.acd.queue.bean.QueueInfo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,10 +20,10 @@ public class Main {
         AcdQueue acdQueue = new AcdQueue();
         CustomerQueueManager customerQueueManager = new CustomerQueueManager();
         customerQueueManager.setAcdQueue(acdQueue);
-        customerQueueManager.notifySwitchOff();
+        customerQueueManager.notifySwitchOn();
 
         List<Agent> agents = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             Agent agent = new Agent(i);
             agents.add(agent);
         }
@@ -30,12 +31,21 @@ public class Main {
 
         customerQueueManager.setCallAgentProxy(callAgentService);
         customerQueueManager.setCallAgentCallBackProxy(callAgentService);
-
-        for (int i = 0; i < 100; i++) {
-            customerQueueManager.line(new Customer(i));
-        }
+        customerQueueManager.setQueueNotifyProxy(callAgentService);
 
         customerQueueManager.start();
+
+        for (int i = 0; i < 10; i++) {
+//            Thread.sleep(1000);
+//            if (i % 5 == 0) {
+//                customerQueueManager.linePriority(new Customer(i));
+//            } else {
+//                customerQueueManager.line(new Customer(i));
+//            }
+            QueueInfo queueInfo = customerQueueManager.line(new Customer(i));
+        }
+
+//        customerQueueManager.start();
 
 //        try {
 //            Thread.sleep(10000);

@@ -5,11 +5,13 @@ import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.CallAgentCallBackProxy;
 import com.yuntongxun.acd.call.CallResult;
 import com.yuntongxun.acd.queue.bean.Customer;
+import com.yuntongxun.acd.queue.notification.QueueNotification;
+import com.yuntongxun.acd.queue.notification.QueueNotifyProxy;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class CallAgentService extends AbstractCallAgentProxy implements CallAgentCallBackProxy {
+public class CallAgentService extends AbstractCallAgentProxy implements CallAgentCallBackProxy, QueueNotifyProxy {
 
     public CallAgentService(List<Agent> agents) {
         super(agents);
@@ -19,7 +21,8 @@ public class CallAgentService extends AbstractCallAgentProxy implements CallAgen
     public CallResult callAgent(Customer customer, Agent agent) {
         System.out.println("customer" + customer + " calling " + agent);
 
-        int a = new Random().nextInt(10);
+//        int a = new Random().nextInt(10);
+        int a = 3;
 //        try {
 //            Thread.sleep(a * 1000);
 //        } catch (InterruptedException e) {
@@ -28,14 +31,14 @@ public class CallAgentService extends AbstractCallAgentProxy implements CallAgen
 
         CallResult.Builder builder = new CallResult.Builder();
 
-        if (a % 3 != 0) {
-            agree(customer.getId());
-//            builder.callDate(new Date()).success().build();
-        } else {
-            reject(customer.getId());
-//            builder.callDate(new Date()).failed(agent + " reject...").build();
-        }
-//        agree(customer.getId());
+//        if (a % 3 != 0) {
+//            agree(customer.getId());
+////            builder.callDate(new Date()).success().build();
+//        } else {
+//            reject(customer.getId());
+////            builder.callDate(new Date()).failed(agent + " reject...").build();
+//        }
+        agree(customer.getId());
         callFinish(agent);
 
         return builder.callDate(new Date()).success().build();
@@ -67,5 +70,10 @@ public class CallAgentService extends AbstractCallAgentProxy implements CallAgen
     @Override
     public void rejectCall(Customer customer, Agent agent) {
             System.out.println("agent : " + agent + " reject call from " + customer);
+    }
+
+    @Override
+    public void sendNotification(QueueNotification queueNotification) {
+        System.out.println(" queue has changed Customer : " + ((Customer)queueNotification.getLineElement()).getId() + " precount : " + queueNotification.getPreCount());
     }
 }
