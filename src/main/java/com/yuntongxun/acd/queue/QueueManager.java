@@ -15,6 +15,8 @@ public interface QueueManager {
 
     void lineFailed(LineElement element);
 
+    void cancelLine(LineElement element);
+
     void processFinish(LineElement element);
 
     void queueNotify();

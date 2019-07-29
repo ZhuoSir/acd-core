@@ -4,6 +4,7 @@ import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.Agent.ConferenceRoom;
 import com.yuntongxun.acd.queue.bean.Customer;
 
+import java.util.Collection;
 import java.util.List;
 
 public abstract class AbstractCallAgentProxy implements CallAgentProxy, CallAgentAction {
@@ -11,11 +12,29 @@ public abstract class AbstractCallAgentProxy implements CallAgentProxy, CallAgen
     protected AgentManager agentManager;
     protected CallAgentManager callAgentManager;
 
+    public AbstractCallAgentProxy() {
+        agentManager = new AgentManager();
+        callAgentManager = new CallAgentManager();
+    }
 
     public AbstractCallAgentProxy(List<Agent> agents) {
         agentManager = new AgentManager();
         callAgentManager = new CallAgentManager();
+        if (agents != null) {
+            agentManager.putAgentQueue(agents);
+        }
+    }
+
+    public void putAgent(Agent agent) {
+        agentManager.putAgentQueue(agent);
+    }
+
+    public void putAgent(Collection<Agent> agents) {
         agentManager.putAgentQueue(agents);
+    }
+
+    public void removeAgent(Agent agent) {
+        agentManager.removeAgentQueue(agent);
     }
 
     public void setAgentManager(AgentManager agentManager) {

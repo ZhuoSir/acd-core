@@ -4,7 +4,7 @@ import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.Agent.ConferenceRoom;
 import com.yuntongxun.acd.queue.bean.Customer;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,12 +25,16 @@ public class AgentManager {
         this.agentQueue = agentQueue;
     }
 
-    public void putAgentQueue(List<Agent> agentQueue) {
+    public void putAgentQueue(Collection<Agent> agentQueue) {
         this.agentQueue.addAll(agentQueue);
     }
 
     public void putAgentQueue(Agent agent) {
         this.agentQueue.add(agent);
+    }
+
+    public void removeAgentQueue(Agent agent) {
+        this.agentQueue.remove(agent);
     }
 
     public Agent distributedAgent(String customerId) {

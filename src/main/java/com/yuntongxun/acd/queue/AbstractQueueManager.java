@@ -57,6 +57,11 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
         acdQueue.addProcessFailed(element);
     }
 
+    @Override
+    public void cancelLine(LineElement element) {
+        acdQueue.remove(element);
+    }
+
     public void processFinish(LineElement element) {
     }
 

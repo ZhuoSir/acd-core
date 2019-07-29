@@ -37,6 +37,12 @@ public class AcdQueue {
         processFailedQueue.add(element);
     }
 
+    public void remove(LineElement element) {
+        waitingQueue.remove(element);
+        priorityQueue.remove(element);
+        processFailedQueue.remove(element);
+    }
+
     public BlockingQueue<LineElement> getWaitingQueue() {
         return waitingQueue;
     }
