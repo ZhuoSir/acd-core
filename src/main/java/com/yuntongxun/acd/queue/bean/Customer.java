@@ -6,6 +6,10 @@ public class Customer extends LineElement {
 
     private String account;
 
+    public Customer(String account) {
+        this.account = account;
+    }
+
     public Customer(int index) {
         this.index = index;
     }

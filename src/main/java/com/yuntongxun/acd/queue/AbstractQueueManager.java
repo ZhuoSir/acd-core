@@ -1,5 +1,6 @@
 package com.yuntongxun.acd.queue;
 
+import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.LineElement;
 import com.yuntongxun.acd.queue.bean.QueueInfo;
 
@@ -94,7 +95,9 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
                 }
 
                 if (null != element) {
-                    if (workAfterLine(element)) {
+                    Agent agent = workAfterLine(element);
+                    if (agent != null) {
+                        queueProxy.distributeNotify(element, agent);
                         if (notifySwitch) {
                             queueNotify();
                         }
@@ -107,5 +110,5 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
 
     }
 
-    public abstract boolean workAfterLine(LineElement element);
+    public abstract Agent workAfterLine(LineElement element);
 }

@@ -7,11 +7,12 @@ import com.yuntongxun.acd.call.CallResult;
 import com.yuntongxun.acd.queue.bean.Customer;
 import com.yuntongxun.acd.queue.notification.QueueNotification;
 import com.yuntongxun.acd.queue.notification.QueueNotifyProxy;
+import com.yuntongxun.acd.service.AbstractCallAgentService;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class CallAgentService extends AbstractCallAgentProxy implements CallAgentCallBackProxy, QueueNotifyProxy {
+public class CallAgentService extends AbstractCallAgentService {
 
     public CallAgentService(List<Agent> agents) {
         super(agents);
@@ -21,23 +22,23 @@ public class CallAgentService extends AbstractCallAgentProxy implements CallAgen
     public CallResult callAgent(Customer customer, Agent agent) {
         System.out.println("customer" + customer + " calling " + agent);
 
-//        int a = new Random().nextInt(10);
-        int a = 3;
-//        try {
-//            Thread.sleep(a * 1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        int a = new Random().nextInt(10);
+//        int a = 3;
+        try {
+            Thread.sleep(a * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         CallResult.Builder builder = new CallResult.Builder();
 
-//        if (a % 3 != 0) {
-//            agree(customer.getId());
-////            builder.callDate(new Date()).success().build();
-//        } else {
-//            reject(customer.getId());
-////            builder.callDate(new Date()).failed(agent + " reject...").build();
-//        }
+        if (a % 3 != 0) {
+            agree(customer.getId());
+//            builder.callDate(new Date()).success().build();
+        } else {
+            reject(customer.getId());
+//            builder.callDate(new Date()).failed(agent + " reject...").build();
+        }
         agree(customer.getId());
         callFinish(agent);
 
@@ -74,6 +75,10 @@ public class CallAgentService extends AbstractCallAgentProxy implements CallAgen
 
     @Override
     public void sendNotification(QueueNotification queueNotification) {
-        System.out.println(" queue has changed Customer : " + ((Customer)queueNotification.getLineElement()).getId() + " precount : " + queueNotification.getPreCount());
+        if (queueNotification.getLineStatus() == 0) {
+            System.out.println(" queue has changed Customer : " + ((Customer)queueNotification.getLineElement()).getId() + " precount : " + queueNotification.getPreCount());
+        } else {
+            System.out.println(" customer : " + ((Customer)queueNotification.getLineElement()).getId() + " has distributed agent: " + queueNotification.getDistributedAgent().getAgentId());
+        }
     }
 }

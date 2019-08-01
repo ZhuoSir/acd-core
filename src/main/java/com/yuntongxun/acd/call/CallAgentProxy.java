@@ -1,9 +1,10 @@
 package com.yuntongxun.acd.call;
 
+import com.yuntongxun.acd.call.Agent.ConferenceRoom;
 import com.yuntongxun.acd.queue.bean.Customer;
 
 public interface CallAgentProxy {
 
-    boolean call(Customer customer, CallAgentCallBack callAgentCallBack);
+    ConferenceRoom call(Customer customer, CallAgentCallBack callAgentCallBack);
 
 }

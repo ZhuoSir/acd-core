@@ -11,6 +11,8 @@ public class Agent {
 
     private String agentId;
 
+    private String account;
+
     public String getAgentId() {
         return agentId;
     }
@@ -31,11 +33,20 @@ public class Agent {
         this.agentId = "A" + index;
     }
 
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     @Override
     public String toString() {
         return "Agent{" +
                 "status=" + status +
                 ", agentId='" + agentId + '\'' +
+                ", account='" + account + '\'' +
                 '}';
     }
 }

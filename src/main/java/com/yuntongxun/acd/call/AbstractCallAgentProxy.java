@@ -6,8 +6,9 @@ import com.yuntongxun.acd.queue.bean.Customer;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
-public abstract class AbstractCallAgentProxy implements CallAgentProxy, CallAgentAction {
+public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAgentAction {
 
     protected AgentManager agentManager;
     protected CallAgentManager callAgentManager;
@@ -33,8 +34,12 @@ public abstract class AbstractCallAgentProxy implements CallAgentProxy, CallAgen
         agentManager.putAgentQueue(agents);
     }
 
-    public void removeAgent(Agent agent) {
-        agentManager.removeAgentQueue(agent);
+    public void removeAgent(String account) {
+        agentManager.removeAgentQueue(account);
+    }
+
+    public BlockingQueue<Agent> getAgentQueue() {
+        return agentManager.getAgentQueue();
     }
 
     public void setAgentManager(AgentManager agentManager) {
@@ -50,14 +55,13 @@ public abstract class AbstractCallAgentProxy implements CallAgentProxy, CallAgen
     }
 
     @Override
-    public boolean call(Customer customer, CallAgentCallBack callAgentCallBack) {
+    public ConferenceRoom call(Customer customer, CallAgentCallBack callAgentCallBack) {
 
         ConferenceRoom conferenceRoom = agentManager.distributeAgent(customer);
         if (null != conferenceRoom) {
             callAgentManager.createCallTask(conferenceRoom, this, callAgentCallBack);
-            return true;
         }
-        return false;
+        return conferenceRoom;
     }
 
     @Override

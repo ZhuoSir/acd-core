@@ -1,5 +1,6 @@
 package com.yuntongxun.acd.queue;
 
+import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.Agent.ConferenceRoom;
 import com.yuntongxun.acd.call.CallAgentCallBack;
 import com.yuntongxun.acd.call.CallAgentCallBackProxy;
@@ -20,12 +21,12 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
     private QueueNotifyProxy queueNotifyProxy;
 
     @Override
-    public boolean workAfterLine(LineElement element) {
+    public Agent workAfterLine(LineElement element) {
         Customer customer = (Customer) element;
         if (null != callAgentProxy) {
-            return callAgentProxy.call(customer, this);
+            return callAgentProxy.call(customer, this).getAgent();
         }
-        return false;
+        return null;
     }
 
     public void setCallAgentProxy(CallAgentProxy callAgentProxy) {
@@ -64,9 +65,17 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
         int preCount = 0;
         while (iterator.hasNext()) {
             LineElement lineElement = iterator.next();
-            QueueNotification queueNotification = new QueueNotification(lineElement, preCount, new Date());
+            QueueNotification queueNotification = new QueueNotification(lineElement, preCount, new Date(), 0);
             queueNotifyProxy.sendNotification(queueNotification);
             preCount++;
         }
+    }
+
+    @Override
+    public void distributeNotify(LineElement lineElement, Agent agent) {
+        if (null == queueNotifyProxy) return;
+        QueueNotification queueNotification = new QueueNotification(lineElement, 0, new Date(), 1);
+        queueNotification.setDistributedAgent(agent);
+        queueNotifyProxy.sendNotification(queueNotification);
     }
 }

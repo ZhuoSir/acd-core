@@ -7,8 +7,14 @@ import com.yuntongxun.acd.queue.bean.Customer;
 import com.yuntongxun.acd.queue.bean.QueueInfo;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AcdServer {
+
+    private int notify;
 
     private AcdQueue acdQueue;
 
@@ -16,7 +22,11 @@ public class AcdServer {
 
     private AbstractCallAgentService callAgentService;
 
-    public void init(boolean isNotify) {
+    private AtomicInteger cindex;
+
+    private Map<String, Customer> customerMap = new ConcurrentHashMap<>();
+
+    public void init() {
         acdQueue = new AcdQueue();
         customerQueueManager = new CustomerQueueManager();
         customerQueueManager.setAcdQueue(acdQueue);
@@ -25,10 +35,12 @@ public class AcdServer {
             customerQueueManager.setCallAgentCallBackProxy(callAgentService);
             customerQueueManager.setCallAgentProxy(callAgentService);
         }
-        if (isNotify)
+        if (notify == 1)
             customerQueueManager.notifySwitchOn();
         else
             customerQueueManager.notifySwitchOff();
+
+        cindex = new AtomicInteger(0);
     }
 
 
@@ -39,7 +51,11 @@ public class AcdServer {
 
     public QueueInfo line(Customer customer) {
         if (null == customerQueueManager) return null;
-        return customerQueueManager.line(customer);
+        customer.setIndex(cindex.getAndIncrement());
+        QueueInfo queueInfo = customerQueueManager.line(customer);
+        customerMap.put(customer.getId(), customer);
+        queueInfo.setIndex(customer.getId());
+        return queueInfo;
     }
 
     public void linePriority(Customer customer) {
@@ -47,19 +63,21 @@ public class AcdServer {
         customerQueueManager.linePriority(customer);
     }
 
-    public void cancelLine(Customer customer) {
+    public void cancelLine(String cindex) {
         if (null == customerQueueManager) return;
+        Customer customer = customerMap.get(cindex);
         customerQueueManager.cancelLine(customer);
     }
 
-    public void rejectCall(String customerId) {
+    public void rejectCall(String cindex) {
         if (null == callAgentService) return;
-        callAgentService.reject(customerId);
+        callAgentService.reject(cindex);
     }
 
-    public void agreeCall(String customerId) {
+    public void agreeCall(String cindex) {
         if (null == callAgentService) return;
-        callAgentService.agree(customerId);
+        callAgentService.agree(cindex);
+        customerMap.remove(cindex);
     }
 
     public void addAgents(Collection<Agent> agents) {
@@ -72,9 +90,13 @@ public class AcdServer {
         callAgentService.putAgent(agent);
     }
 
-    public void removeAgent(Agent agent) {
+    public void removeAgent(String account) {
         if (null == callAgentService) return;
-        callAgentService.removeAgent(agent);
+        callAgentService.removeAgent(account);
+    }
+
+    public BlockingQueue<Agent> getAgentQueue() {
+        return callAgentService.getAgentQueue();
     }
 
     public void setCallAgentService(AbstractCallAgentService callAgentService) {
@@ -84,5 +106,9 @@ public class AcdServer {
             customerQueueManager.setCallAgentCallBackProxy(callAgentService);
             customerQueueManager.setCallAgentProxy(callAgentService);
         }
+    }
+
+    public void setNotify(int notify) {
+        this.notify = notify;
     }
 }
