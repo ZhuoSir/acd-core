@@ -1,5 +1,6 @@
 package com.yuntongxun.acd.call.Agent;
 
+import com.yuntongxun.acd.call.CallResult;
 import com.yuntongxun.acd.queue.bean.Customer;
 
 import java.util.Date;
@@ -14,6 +15,8 @@ public class ConferenceRoom {
 
     // 1 call成功 0 call 失败
     private int callStatus;
+
+    private CallResult callResult;
 
     private Date callDate;
 
@@ -55,5 +58,13 @@ public class ConferenceRoom {
 
     public Date getCallDate() {
         return callDate;
+    }
+
+    public CallResult getCallResult() {
+        return callResult;
+    }
+
+    public void setCallResult(CallResult callResult) {
+        this.callResult = callResult;
     }
 }

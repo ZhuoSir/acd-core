@@ -1,6 +1,6 @@
 package com.yuntongxun.acd.queue.bean;
 
-public class QueueInfo {
+public class LineElementInfo {
 
     private int waitingCount;
 
@@ -24,7 +24,7 @@ public class QueueInfo {
 
     @Override
     public String toString() {
-        return "QueueInfo{" +
+        return "LineElementInfo{" +
                 "waitingCount=" + waitingCount +
                 ", index='" + index + '\'' +
                 '}';

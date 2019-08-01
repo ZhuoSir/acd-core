@@ -2,7 +2,7 @@ package com.yuntongxun.example;
 
 import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.Customer;
-import com.yuntongxun.acd.queue.bean.QueueInfo;
+import com.yuntongxun.acd.queue.bean.LineElementInfo;
 import com.yuntongxun.acd.service.AbstractCallAgentService;
 import com.yuntongxun.acd.service.AcdServer;
 
@@ -36,8 +36,8 @@ public class AcdMain {
 //            }
             Customer customer = new Customer(i);
             customer.setAccount("ceshi" + i);
-            QueueInfo queueInfo = acdServer.line(customer);
-            System.out.println(queueInfo);
+            LineElementInfo lineElementInfo = acdServer.line(customer);
+            System.out.println(lineElementInfo);
         }
     }
 

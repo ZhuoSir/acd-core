@@ -1,12 +1,9 @@
 package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.queue.bean.LineElement;
-import com.yuntongxun.acd.queue.bean.QueueInfo;
 
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -27,6 +24,7 @@ public class AcdQueue {
 
     public void add(LineElement element) {
         waitingQueue.add(element);
+        element.setWaitingCount(waitingQueue.size() - 1);
     }
 
     public void addPriority(LineElement element) {
@@ -76,14 +74,7 @@ public class AcdQueue {
                 '}';
     }
 
-    public String detail() {
-        String string = "waiting : " + waitingQueue.size() + " priority : " + priorityQueue.size() + " processFailed : " + processFailedQueue.size();
-        return string;
-    }
-
-    public QueueInfo getQueueInfo() {
-        QueueInfo queueInfo = new QueueInfo();
-        queueInfo.setWaitingCount(waitingQueue.size());
-        return queueInfo;
+    public int waitingCount() {
+        return waitingQueue.size();
     }
 }

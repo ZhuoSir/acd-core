@@ -2,9 +2,8 @@ package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.LineElement;
-import com.yuntongxun.acd.queue.bean.QueueInfo;
+import com.yuntongxun.acd.queue.bean.LineElementInfo;
 
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -43,9 +42,9 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
     }
 
     @Override
-    public QueueInfo line(LineElement element) {
+    public LineElementInfo line(LineElement element) {
         acdQueue.add(element);
-        return acdQueue.getQueueInfo();
+        return element.getInfo();
     }
 
     @Override
@@ -95,12 +94,12 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
                 }
 
                 if (null != element) {
+                    if (notifySwitch) {
+                        queueNotify();
+                    }
                     Agent agent = workAfterLine(element);
                     if (agent != null) {
                         queueProxy.distributeNotify(element, agent);
-                        if (notifySwitch) {
-                            queueNotify();
-                        }
                     }
                 }
             }

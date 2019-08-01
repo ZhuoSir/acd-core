@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.call;
 
 import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.call.CallAgentException;
 
 import java.util.Date;
 
@@ -56,7 +57,7 @@ public class CallAgentTask implements Runnable {
     }
 
     public String getCustomerId() {
-        return this.conferenceRoom.getCustomer().getId();
+        return this.conferenceRoom.getCustomer().index();
     }
 
     public int getStatus() {
@@ -73,10 +74,17 @@ public class CallAgentTask implements Runnable {
 
     @Override
     public void run() {
-        Thread.currentThread().setName("CallAgentTask[" + conferenceRoom.getCustomer().getId() + "," + conferenceRoom.getAgent().getAgentId() + "]");
+        Thread.currentThread().setName("CallAgentTask[" + conferenceRoom.getCustomer().index() + "," + conferenceRoom.getAgent().getAgentId() + "]");
         taskStartTime = new Date();
         conferenceRoom.setCallDate(taskStartTime);
         CallResult callResult = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
+        conferenceRoom.setCallResult(callResult);
+        if (callResult == null) {
+            new CallAgentException(" CallAgent method return reference can not be NULL,  call failed otherwise").printStackTrace();
+            callAgentResultHandle.callFailed(conferenceRoom);
+            return;
+        }
+
         if (callResult.isSuccess()) {
             callAgentResultHandle.callSuccess(conferenceRoom);
             status = SUCCESS;

@@ -59,7 +59,7 @@ public class AgentManager {
             Agent agent = agentQueue.take();
             agent.setStatus(Agent.BUSY);
             ConferenceRoom conferenceRoom = new ConferenceRoom(agent, customer);
-            conferenceRoomPool.put(customer.getId(), conferenceRoom);
+            conferenceRoomPool.put(customer.index(), conferenceRoom);
             return conferenceRoom;
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -1,12 +1,15 @@
 package com.yuntongxun.acd.service;
 
 import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.call.CallFailedDetail;
 import com.yuntongxun.acd.queue.AcdQueue;
 import com.yuntongxun.acd.queue.CustomerQueueManager;
 import com.yuntongxun.acd.queue.bean.Customer;
-import com.yuntongxun.acd.queue.bean.QueueInfo;
+import com.yuntongxun.acd.queue.bean.LineElementInfo;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +37,7 @@ public class AcdServer {
             customerQueueManager.setQueueNotifyProxy(callAgentService);
             customerQueueManager.setCallAgentCallBackProxy(callAgentService);
             customerQueueManager.setCallAgentProxy(callAgentService);
+            callAgentService.setCallAgentResultHandle(customerQueueManager);
         }
         if (notify == 1)
             customerQueueManager.notifySwitchOn();
@@ -49,13 +53,13 @@ public class AcdServer {
         customerQueueManager.start();
     }
 
-    public QueueInfo line(Customer customer) {
+    public LineElementInfo line(Customer customer) {
         if (null == customerQueueManager) return null;
         customer.setIndex(cindex.getAndIncrement());
-        QueueInfo queueInfo = customerQueueManager.line(customer);
-        customerMap.put(customer.getId(), customer);
-        queueInfo.setIndex(customer.getId());
-        return queueInfo;
+        LineElementInfo lineElementInfo = customerQueueManager.line(customer);
+        customerMap.put(customer.index(), customer);
+        lineElementInfo.setIndex(customer.index());
+        return lineElementInfo;
     }
 
     public void linePriority(Customer customer) {
@@ -95,6 +99,15 @@ public class AcdServer {
         callAgentService.removeAgent(account);
     }
 
+    public List<CallFailedDetail> getFailedCallAgent() {
+        if (null == callAgentService) return null;
+        return callAgentService.getFailedCallAgentList();
+    }
+
+    public AcdQueue queueInfo() {
+        return acdQueue;
+    }
+
     public BlockingQueue<Agent> getAgentQueue() {
         return callAgentService.getAgentQueue();
     }
@@ -105,6 +118,7 @@ public class AcdServer {
             customerQueueManager.setQueueNotifyProxy(callAgentService);
             customerQueueManager.setCallAgentCallBackProxy(callAgentService);
             customerQueueManager.setCallAgentProxy(callAgentService);
+            callAgentService.setCallAgentResultHandle(customerQueueManager);
         }
     }
 

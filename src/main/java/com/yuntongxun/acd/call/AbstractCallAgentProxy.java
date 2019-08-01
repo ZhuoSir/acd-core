@@ -4,6 +4,7 @@ import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.Agent.ConferenceRoom;
 import com.yuntongxun.acd.queue.bean.Customer;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -12,6 +13,8 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
 
     protected AgentManager agentManager;
     protected CallAgentManager callAgentManager;
+
+    private CallAgentResultHandle callAgentResultHandle;
 
     public AbstractCallAgentProxy() {
         agentManager = new AgentManager();
@@ -74,5 +77,14 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     public void callCancel(Customer customer, Agent agent) {
         if (agent.getStatus() != Agent.DENY)
             agentManager.putAgentQueue(agent);
+    }
+
+    public void setCallAgentResultHandle(CallAgentResultHandle callAgentResultHandle) {
+        this.callAgentResultHandle = callAgentResultHandle;
+        this.callAgentManager.setLastOneCallAgentResultHandle(callAgentResultHandle);
+    }
+
+    public List<CallFailedDetail> getFailedCallAgentList() {
+        return callAgentManager.getFailedList();
     }
 }

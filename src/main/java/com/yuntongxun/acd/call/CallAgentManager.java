@@ -14,7 +14,9 @@ public class CallAgentManager implements CallAgentResultHandle {
     private ExecutorService callTaskPools = Executors.newFixedThreadPool(20);
     private Map<String, CallAgentTask> callAgentTaskPools = new ConcurrentHashMap<>();
 
-    private List<ConferenceRoom> failedList = new ArrayList<>();
+    private List<CallFailedDetail> failedList = new ArrayList<>();
+
+    private CallAgentResultHandle lastOneCallAgentResultHandle;
 
     public String createCallTask(ConferenceRoom conferenceRoom, CallAgentAction callAgentAction, CallAgentCallBack callAgentCallBack) {
         CallAgentTask callAgentTask = new CallAgentTask(conferenceRoom, callAgentAction, callAgentCallBack, this);
@@ -45,16 +47,26 @@ public class CallAgentManager implements CallAgentResultHandle {
     @Override
     public void callSuccess(ConferenceRoom conferenceRoom) {
         conferenceRoom.setCallStatus(ConferenceRoom.CALLSUCCESS);
+        if (lastOneCallAgentResultHandle != null) {
+            lastOneCallAgentResultHandle.callFailed(conferenceRoom);
+        }
     }
 
     @Override
     public void callFailed(ConferenceRoom conferenceRoom) {
         conferenceRoom.setCallStatus(ConferenceRoom.CALLFAILED);
-        failedList.add(conferenceRoom);
-        callAgentTaskPools.remove(conferenceRoom.getCustomer().getId());
+        failedList.add(new CallFailedDetail(conferenceRoom));
+        callAgentTaskPools.remove(conferenceRoom.getCustomer().index());
+        if (lastOneCallAgentResultHandle != null) {
+            lastOneCallAgentResultHandle.callFailed(conferenceRoom);
+        }
     }
 
-    public List<ConferenceRoom> getFailedList() {
+    public List<CallFailedDetail> getFailedList() {
         return failedList;
+    }
+
+    public void setLastOneCallAgentResultHandle(CallAgentResultHandle lastOneHandle) {
+        this.lastOneCallAgentResultHandle = lastOneHandle;
     }
 }

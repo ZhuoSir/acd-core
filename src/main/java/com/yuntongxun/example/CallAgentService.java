@@ -33,13 +33,13 @@ public class CallAgentService extends AbstractCallAgentService {
         CallResult.Builder builder = new CallResult.Builder();
 
         if (a % 3 != 0) {
-            agree(customer.getId());
+            agree(customer.index());
 //            builder.callDate(new Date()).success().build();
         } else {
-            reject(customer.getId());
+            reject(customer.index());
 //            builder.callDate(new Date()).failed(agent + " reject...").build();
         }
-        agree(customer.getId());
+        agree(customer.index());
         callFinish(agent);
 
         return builder.callDate(new Date()).success().build();
@@ -76,9 +76,9 @@ public class CallAgentService extends AbstractCallAgentService {
     @Override
     public void sendNotification(QueueNotification queueNotification) {
         if (queueNotification.getLineStatus() == 0) {
-            System.out.println(" queue has changed Customer : " + ((Customer)queueNotification.getLineElement()).getId() + " precount : " + queueNotification.getPreCount());
+            System.out.println(" queue has changed Customer : " + ((Customer)queueNotification.getLineElement()).index() + " precount : " + queueNotification.getPreCount());
         } else {
-            System.out.println(" customer : " + ((Customer)queueNotification.getLineElement()).getId() + " has distributed agent: " + queueNotification.getDistributedAgent().getAgentId());
+            System.out.println(" customer : " + ((Customer)queueNotification.getLineElement()).index() + " has distributed agent: " + queueNotification.getDistributedAgent().getAgentId());
         }
     }
 }

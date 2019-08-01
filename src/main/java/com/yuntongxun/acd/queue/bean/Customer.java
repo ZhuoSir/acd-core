@@ -2,7 +2,7 @@ package com.yuntongxun.acd.queue.bean;
 
 public class Customer extends LineElement {
 
-    private int index;
+    private String index;
 
     private String account;
 
@@ -11,19 +11,19 @@ public class Customer extends LineElement {
     }
 
     public Customer(int index) {
-        this.index = index;
+        this.index = "C" + index;
     }
 
     public void setIndex(int index) {
-        this.index = index;
+        this.index = "C" + index;
     }
 
     @Override
-    public String getId() {
-        return "C" + index;
+    public String index() {
+        return index;
     }
 
-    public int getIndex() {
+    public String getIndex() {
         return index;
     }
 
@@ -38,8 +38,9 @@ public class Customer extends LineElement {
     @Override
     public String toString() {
         return "Customer{" +
-                "index=" + getId() +
+                "index=" + index() +
                 ", account='" + account + '\'' +
+                ", waitingCount='" + getWaitingCount() + '\'' +
                 '}';
     }
 }
