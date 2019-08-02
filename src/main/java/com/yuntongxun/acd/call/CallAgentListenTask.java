@@ -31,13 +31,17 @@ public class CallAgentListenTask implements Runnable {
 
     @Override
     public void run() {
+        String threadName = "CallAgentListenTask[" + conferenceRoom.getCustomer().getIndex() + "-" + conferenceRoom.getAgent().getAgentId() + "]";
 
+        Thread.currentThread().setName(threadName);
         try {
+            System.out.println(threadName + "is listenning " + timeout + "S");
             Thread.sleep(timeout * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        System.out.println(threadName + " has stopped ");
         if (responseCallBack != null) {
             if (!isResponse) {
                 responseCallBack.notresponsed(conferenceRoom);

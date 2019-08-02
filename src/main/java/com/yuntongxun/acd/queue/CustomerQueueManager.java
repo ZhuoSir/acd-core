@@ -27,7 +27,7 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
     private Map<String, CallAgentListenTask> callAgentListenTaskMap = new ConcurrentHashMap<>();
 
     public CustomerQueueManager() {
-        taskPool = Executors.newFixedThreadPool(3);
+        taskPool = Executors.newCachedThreadPool();
     }
 
     @Override

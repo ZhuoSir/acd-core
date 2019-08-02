@@ -14,7 +14,7 @@ public class AcdMain {
     public static void main(String[] args) {
 
         List<Agent> agents = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1000; i++) {
             Agent agent = new Agent(i);
             agent.setAccount("agent" + i);
             agents.add(agent);
@@ -27,7 +27,7 @@ public class AcdMain {
         acdServer.init();
         acdServer.start();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2000; i++) {
 //            Thread.sleep(1000);
 //            if (i % 5 == 0) {
 //                customerQueueManager.linePriority(new Customer(i));
@@ -37,7 +37,7 @@ public class AcdMain {
             Customer customer = new Customer(i);
             customer.setAccount("ceshi" + i);
             LineElementInfo lineElementInfo = acdServer.line(customer);
-            System.out.println(lineElementInfo);
+//            System.out.println(lineElementInfo);
         }
     }
 
