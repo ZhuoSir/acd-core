@@ -81,8 +81,8 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
     public void rejectCall(ConferenceRoom conferenceRoom) {
         if (callAgentCallBackProxy == null) return;
         this.callAgentCallBackProxy.rejectCall(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
-        this.lineFailed(conferenceRoom.getCustomer());
         this.processFinish(conferenceRoom.getCustomer());
+        this.lineFailed(conferenceRoom.getCustomer());
     }
 
     @Override
