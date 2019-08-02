@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CallAgentManager implements CallAgentResultHandle {
+public class CallAgentManager extends Thread implements CallAgentResultHandle {
 
     private ExecutorService callTaskPools = Executors.newFixedThreadPool(20);
     private Map<String, CallAgentTask> callAgentTaskPools = new ConcurrentHashMap<>();
@@ -68,5 +68,11 @@ public class CallAgentManager implements CallAgentResultHandle {
 
     public void setLastOneCallAgentResultHandle(CallAgentResultHandle lastOneHandle) {
         this.lastOneCallAgentResultHandle = lastOneHandle;
+    }
+
+    @Override
+    public void run() {
+        super.run();
+
     }
 }

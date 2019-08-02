@@ -87,4 +87,8 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     public List<CallFailedDetail> getFailedCallAgentList() {
         return callAgentManager.getFailedList();
     }
+
+    public void startCallListenThread() {
+
+    }
 }

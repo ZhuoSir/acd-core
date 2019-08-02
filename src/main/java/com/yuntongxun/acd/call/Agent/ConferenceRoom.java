@@ -67,4 +67,14 @@ public class ConferenceRoom {
     public void setCallResult(CallResult callResult) {
         this.callResult = callResult;
     }
+
+    @Override
+    public String toString() {
+        return "ConferenceRoom{" +
+                "customer=" + customer +
+                ", callStatus=" + callStatus +
+                ", callResult=" + callResult +
+                ", callDate=" + callDate +
+                '}';
+    }
 }
