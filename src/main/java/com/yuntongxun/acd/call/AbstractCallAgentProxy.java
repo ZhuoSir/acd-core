@@ -14,8 +14,6 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     protected AgentManager agentManager;
     protected CallAgentManager callAgentManager;
 
-    private CallAgentResultHandle callAgentResultHandle;
-
     public AbstractCallAgentProxy() {
         agentManager = new AgentManager();
         callAgentManager = new CallAgentManager();
@@ -69,26 +67,19 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
 
     @Override
     public void callFinish(Agent agent) {
-        if (agent.getStatus() != Agent.DENY)
-            agentManager.putAgentQueue(agent);
+        agentManager.putAgentQueue(agent);
     }
 
     @Override
     public void callCancel(Customer customer, Agent agent) {
-        if (agent.getStatus() != Agent.DENY)
-            agentManager.putAgentQueue(agent);
+        agentManager.putAgentQueue(agent);
     }
 
     public void setCallAgentResultHandle(CallAgentResultHandle callAgentResultHandle) {
-        this.callAgentResultHandle = callAgentResultHandle;
         this.callAgentManager.setLastOneCallAgentResultHandle(callAgentResultHandle);
     }
 
     public List<CallFailedDetail> getFailedCallAgentList() {
         return callAgentManager.getFailedList();
-    }
-
-    public void startCallListenThread() {
-
     }
 }
