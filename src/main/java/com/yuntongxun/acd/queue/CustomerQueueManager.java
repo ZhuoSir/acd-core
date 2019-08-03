@@ -39,15 +39,12 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
             CallAgentListenTask callAgentListenTask = new CallAgentListenTask(callListenTimeout, conferenceRoom, new CallAgentListenTask.ResponseCallBack() {
                 @Override
                 public void responsed(ConferenceRoom conferenceRoom) {
-                    // 已响应，不处理；
                 }
 
                 @Override
                 public void notresponsed(ConferenceRoom conferenceRoom) {
-                    // 未响应
-                    System.out.println(conferenceRoom + " not responsed ");
+                    callAgentProxy.callCancel(conferenceRoom);
                     lineFailed(conferenceRoom.getCustomer());
-//                    processFinish(conferenceRoom.getCustomer());
                 }
             });
             callAgentListenTaskMap.put(customer.getIndex(), callAgentListenTask);

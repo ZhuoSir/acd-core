@@ -43,18 +43,6 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
         return agentManager.getAgentQueue();
     }
 
-    public void setAgentManager(AgentManager agentManager) {
-        this.agentManager = agentManager;
-    }
-
-    public void setCallAgentManager(CallAgentManager callAgentManager) {
-        this.callAgentManager = callAgentManager;
-    }
-
-    public AgentManager getAgentManager() {
-        return agentManager;
-    }
-
     @Override
     public ConferenceRoom call(Customer customer, CallAgentCallBack callAgentCallBack) {
 
@@ -66,12 +54,17 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     }
 
     @Override
+    public void callCancel(ConferenceRoom conferenceRoom) {
+        callCancel(conferenceRoom.getAgent());
+    }
+
+    @Override
     public void callFinish(Agent agent) {
         agentManager.putAgentQueue(agent);
     }
 
     @Override
-    public void callCancel(Customer customer, Agent agent) {
+    public void callCancel(Agent agent) {
         agentManager.putAgentQueue(agent);
     }
 

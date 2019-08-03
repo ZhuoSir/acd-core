@@ -9,5 +9,5 @@ public interface CallAgentAction {
 
     void callFinish(Agent agent);
 
-    void callCancel(Customer customer, Agent agent);
+    void callCancel(Agent agent);
 }

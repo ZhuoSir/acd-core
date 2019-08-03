@@ -1,4 +1,4 @@
-package com.yuntongxun.acd.service;
+package com.yuntongxun.acd;
 
 import com.yuntongxun.acd.call.AbstractCallAgentProxy;
 import com.yuntongxun.acd.call.Agent.Agent;

@@ -7,4 +7,5 @@ public interface CallAgentProxy {
 
     ConferenceRoom call(Customer customer, CallAgentCallBack callAgentCallBack);
 
+    void callCancel(ConferenceRoom conferenceRoom);
 }

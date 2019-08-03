@@ -1,16 +1,12 @@
 package com.yuntongxun.example;
 
-import com.yuntongxun.acd.call.AbstractCallAgentProxy;
 import com.yuntongxun.acd.call.Agent.Agent;
-import com.yuntongxun.acd.call.CallAgentCallBackProxy;
 import com.yuntongxun.acd.call.CallResult;
 import com.yuntongxun.acd.queue.bean.Customer;
 import com.yuntongxun.acd.queue.notification.QueueNotification;
-import com.yuntongxun.acd.queue.notification.QueueNotifyProxy;
-import com.yuntongxun.acd.service.AbstractCallAgentService;
+import com.yuntongxun.acd.AbstractCallAgentService;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class CallAgentService extends AbstractCallAgentService {
 
@@ -43,24 +39,6 @@ public class CallAgentService extends AbstractCallAgentService {
 //        callFinish(agent);
 
         return builder.callDate(new Date()).success().build();
-    }
-
-    public void agree(String customerId) {
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        callAgentManager.agentAgreeCall(customerId);
-    }
-
-    public void reject(String customerId) {
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        callAgentManager.agentRejectCall(customerId);
     }
 
     @Override

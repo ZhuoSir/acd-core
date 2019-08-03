@@ -3,8 +3,8 @@ package com.yuntongxun.example;
 import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.Customer;
 import com.yuntongxun.acd.queue.bean.LineElementInfo;
-import com.yuntongxun.acd.service.AbstractCallAgentService;
-import com.yuntongxun.acd.service.AcdServer;
+import com.yuntongxun.acd.AbstractCallAgentService;
+import com.yuntongxun.acd.AcdServer;
 
 import java.util.ArrayList;
 import java.util.List;

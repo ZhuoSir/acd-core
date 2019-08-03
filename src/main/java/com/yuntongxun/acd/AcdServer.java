@@ -1,7 +1,6 @@
-package com.yuntongxun.acd.service;
+package com.yuntongxun.acd;
 
 import com.yuntongxun.acd.call.Agent.Agent;
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
 import com.yuntongxun.acd.call.CallFailedDetail;
 import com.yuntongxun.acd.queue.AcdQueue;
 import com.yuntongxun.acd.queue.CustomerQueueManager;
