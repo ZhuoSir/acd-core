@@ -39,6 +39,7 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
             CallAgentListenTask callAgentListenTask = new CallAgentListenTask(callListenTimeout, conferenceRoom, new CallAgentListenTask.ResponseCallBack() {
                 @Override
                 public void responsed(ConferenceRoom conferenceRoom) {
+                    System.out.println("responsed");
                 }
 
                 @Override
@@ -88,7 +89,7 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
         Customer customer = (Customer) element;
         CallAgentListenTask callAgentListenTask = callAgentListenTaskMap.get(customer.getIndex());
         callAgentListenTask.setResponse(true);
-        callAgentListenTaskMap.put(customer.getIndex(), callAgentListenTask);
+        callAgentListenTaskMap.remove(customer.getIndex());
     }
 
     @Override
@@ -127,6 +128,11 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
     @Override
     public void callFailed(ConferenceRoom conferenceRoom) {
         this.lineFailed(conferenceRoom.getCustomer());
+        this.processFinish(conferenceRoom.getCustomer());
+    }
+
+    @Override
+    public void callError(ConferenceRoom conferenceRoom, Exception e) {
         this.processFinish(conferenceRoom.getCustomer());
     }
 }

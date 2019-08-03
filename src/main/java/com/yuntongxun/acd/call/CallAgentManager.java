@@ -8,8 +8,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
-public class CallAgentManager implements CallAgentResultHandle {
+public class CallAgentManager implements CallAgentResultHandle, Thread.UncaughtExceptionHandler {
 
     private ExecutorService callTaskPools = Executors.newFixedThreadPool(20);
     private Map<String, CallAgentTask> callAgentTaskPools = new ConcurrentHashMap<>();
@@ -22,6 +23,7 @@ public class CallAgentManager implements CallAgentResultHandle {
         CallAgentTask callAgentTask = new CallAgentTask(conferenceRoom, callAgentAction, callAgentCallBack, this);
         callAgentTaskPools.put(callAgentTask.getCustomerId(), callAgentTask);
 
+        callAgentTask.setUncaughtExceptionHandler(this);
         callTaskPools.submit(callAgentTask);
         return callAgentTask.getAgentId();
     }
@@ -62,11 +64,28 @@ public class CallAgentManager implements CallAgentResultHandle {
         }
     }
 
+    @Override
+    public void callError(ConferenceRoom conferenceRoom, Exception e) {
+        conferenceRoom.setCallStatus(ConferenceRoom.CALLFAILED);
+        failedList.add(new CallFailedDetail(conferenceRoom, e));
+        callAgentTaskPools.remove(conferenceRoom.getCustomer().index());
+        if (lastOneCallAgentResultHandle != null) {
+            lastOneCallAgentResultHandle.callError(conferenceRoom, e);
+        }
+    }
+
     public List<CallFailedDetail> getFailedList() {
         return failedList;
     }
 
     public void setLastOneCallAgentResultHandle(CallAgentResultHandle lastOneHandle) {
         this.lastOneCallAgentResultHandle = lastOneHandle;
+    }
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        if (e instanceof CallAgentException) {
+            e.printStackTrace();
+        }
     }
 }

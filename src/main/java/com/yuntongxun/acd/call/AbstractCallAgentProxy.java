@@ -2,6 +2,7 @@ package com.yuntongxun.acd.call;
 
 import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.call.distribution.AgentDistribute;
 import com.yuntongxun.acd.queue.bean.Customer;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
         agentManager.removeAgentQueue(account);
     }
 
-    public BlockingQueue<Agent> getAgentQueue() {
-        return agentManager.getAgentQueue();
+    public Collection<Agent> getAgentQueue() {
+        return agentManager.getAgents();
     }
 
     @Override
@@ -74,5 +75,9 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
 
     public List<CallFailedDetail> getFailedCallAgentList() {
         return callAgentManager.getFailedList();
+    }
+
+    public void setAgentDistributor(AgentDistribute agentDistributor) {
+        agentManager.setAgentDistribute(agentDistributor);
     }
 }

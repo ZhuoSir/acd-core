@@ -21,11 +21,17 @@ public class CallAgentTask implements Runnable {
     public static int FAILED = 0;
     public static int NONEXECUTED = -1;
 
+    private Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
+
     public CallAgentTask(ConferenceRoom conferenceRoom, CallAgentAction callAgentAction, CallAgentCallBack callAgentCallBack, CallAgentResultHandle callAgentResultHandle) {
         this.conferenceRoom = conferenceRoom;
         this.callAgentAction = callAgentAction;
         this.callAgentCallBack = callAgentCallBack;
         this.callAgentResultHandle = callAgentResultHandle;
+    }
+
+    public void setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler exceptionHandler) {
+        uncaughtExceptionHandler = exceptionHandler;
     }
 
     public ConferenceRoom getConferenceRoom() {
@@ -74,15 +80,21 @@ public class CallAgentTask implements Runnable {
 
     @Override
     public void run() {
+
+        Thread.currentThread().setUncaughtExceptionHandler(uncaughtExceptionHandler);
         Thread.currentThread().setName("CallAgentTask[" + conferenceRoom.getCustomer().index() + "," + conferenceRoom.getAgent().getAgentId() + "]");
         taskStartTime = new Date();
         conferenceRoom.setCallDate(taskStartTime);
-        CallResult callResult = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
+        CallResult callResult = null;
+        try {
+            callResult = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
+        } catch (Exception e) {
+            callAgentResultHandle.callError(conferenceRoom, e);
+        }
+
         conferenceRoom.setCallResult(callResult);
         if (callResult == null) {
-            new CallAgentException(" CallAgent method return reference can not be NULL,  call failed otherwise").printStackTrace();
-            callAgentResultHandle.callFailed(conferenceRoom);
-            return;
+            throw new CallAgentException(" CallAgent method return reference can not be NULL,  call failed otherwise");
         }
 
         if (callResult.isSuccess()) {
@@ -93,5 +105,6 @@ public class CallAgentTask implements Runnable {
             status = FAILED;
         }
         taskEndTime = new Date();
+
     }
 }

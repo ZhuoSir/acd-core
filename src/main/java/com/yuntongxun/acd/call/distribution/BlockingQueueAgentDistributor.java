@@ -6,12 +6,18 @@ import com.yuntongxun.acd.queue.bean.Customer;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
-public class SimpleAgentDistributor implements AgentDistribute {
+public class BlockingQueueAgentDistributor extends AbstractAgentDistributor {
 
     private BlockingQueue<Agent> agentQueue;
-
     private Map<String, Agent> agentMap;
+
+    public BlockingQueueAgentDistributor() {
+        agentMap = new ConcurrentHashMap<>();
+        agentQueue = new LinkedBlockingQueue<>();
+    }
 
     @Override
     public Agent distribute(Customer customer) {

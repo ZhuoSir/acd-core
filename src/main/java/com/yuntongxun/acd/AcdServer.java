@@ -2,6 +2,7 @@ package com.yuntongxun.acd;
 
 import com.yuntongxun.acd.call.Agent.Agent;
 import com.yuntongxun.acd.call.CallFailedDetail;
+import com.yuntongxun.acd.call.distribution.AgentDistribute;
 import com.yuntongxun.acd.queue.AcdQueue;
 import com.yuntongxun.acd.queue.CustomerQueueManager;
 import com.yuntongxun.acd.queue.bean.Customer;
@@ -46,6 +47,9 @@ public class AcdServer {
         cindex = new AtomicInteger(0);
     }
 
+    public void setAgentDistributor(AgentDistribute t) {
+        callAgentService.setAgentDistributor(t);
+    }
 
     public void start() {
         if (null == customerQueueManager) return;
@@ -107,7 +111,7 @@ public class AcdServer {
         return acdQueue;
     }
 
-    public BlockingQueue<Agent> getAgentQueue() {
+    public Collection<Agent> getAgentQueue() {
         return callAgentService.getAgentQueue();
     }
 

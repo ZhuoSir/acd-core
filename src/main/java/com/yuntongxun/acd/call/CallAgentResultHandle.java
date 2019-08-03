@@ -8,4 +8,5 @@ public interface CallAgentResultHandle {
 
     void callFailed(ConferenceRoom conferenceRoom);
 
+    void callError(ConferenceRoom conferenceRoom, Exception e);
 }

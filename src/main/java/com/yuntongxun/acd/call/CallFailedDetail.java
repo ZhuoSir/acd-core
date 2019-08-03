@@ -19,10 +19,25 @@ public class CallFailedDetail {
 
     public CallFailedDetail(ConferenceRoom room) {
         setAgent(room.getAgent());
-        setCallDate(room.getCallResult().getCallDate());
         setCustomer(room.getCustomer());
-        setException(room.getCallResult().getException());
-        setFailedReason(room.getCallResult().getFailedReason());
+
+        CallResult callResult = room.getCallResult();
+        if (callResult != null) {
+            setCallDate(room.getCallResult().getCallDate());
+            setCustomer(room.getCustomer());
+            setFailedReason(room.getCallResult().getFailedReason());
+        }
+    }
+
+    public CallFailedDetail(ConferenceRoom room, Exception exception) {
+        setAgent(room.getAgent());
+        CallResult callResult = room.getCallResult();
+        setException(exception);
+        if (callResult != null) {
+            setCallDate(room.getCallResult().getCallDate());
+            setCustomer(room.getCustomer());
+            setFailedReason(room.getCallResult().getFailedReason());
+        }
     }
 
     public Customer getCustomer() {

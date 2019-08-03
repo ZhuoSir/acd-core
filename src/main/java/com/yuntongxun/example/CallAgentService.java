@@ -28,6 +28,8 @@ public class CallAgentService extends AbstractCallAgentService {
 
         CallResult.Builder builder = new CallResult.Builder();
 
+        throw new RuntimeException(" unknown exception ");
+
 //        if (a % 3 != 0) {
 //            agree(customer.index());
 ////            builder.callDate(new Date()).success().build();
@@ -38,7 +40,8 @@ public class CallAgentService extends AbstractCallAgentService {
 //        agree(customer.index());
 //        callFinish(agent);
 
-        return builder.callDate(new Date()).success().build();
+//        return builder.callDate(new Date()).success().build();
+//        return null;
     }
 
     @Override
