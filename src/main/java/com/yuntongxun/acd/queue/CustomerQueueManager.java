@@ -97,19 +97,25 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
         if (null == queueNotifyProxy) return;
         Queue<LineElement> waitingQueue = acdQueue.getWaitingQueue();
         Iterator<LineElement> iterator = waitingQueue.iterator();
-        int preCount = 0;
-        while (iterator.hasNext()) {
-            LineElement lineElement = iterator.next();
-            lineElement.setWaitingCount(preCount);
-            QueueNotification queueNotification = new QueueNotification(lineElement, preCount, new Date(), 0);
-            taskPool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    queueNotifyProxy.sendNotification(queueNotification);
+        taskPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                int preCount = 0;
+                while (iterator.hasNext()) {
+                    LineElement lineElement = iterator.next();
+                    lineElement.setWaitingCount(preCount);
+                    QueueNotification queueNotification = new QueueNotification(lineElement, preCount, new Date(), 0);
+                    taskPool.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            queueNotifyProxy.sendNotification(queueNotification);
+                        }
+                    });
+                    preCount++;
                 }
-            });
-            preCount++;
-        }
+            }
+        });
+
     }
 
     @Override
@@ -122,17 +128,20 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
 
     @Override
     public void callSuccess(ConferenceRoom conferenceRoom) {
-        return;
+        this.processFinish(conferenceRoom.getCustomer());
     }
 
     @Override
     public void callFailed(ConferenceRoom conferenceRoom) {
-        this.lineFailed(conferenceRoom.getCustomer());
         this.processFinish(conferenceRoom.getCustomer());
+        this.lineFailed(conferenceRoom.getCustomer());
     }
 
     @Override
     public void callError(ConferenceRoom conferenceRoom, Exception e) {
-        this.processFinish(conferenceRoom.getCustomer());
+        Customer customer = conferenceRoom.getCustomer();
+        CallAgentListenTask callAgentListenTask = callAgentListenTaskMap.get(customer.getIndex());
+        callAgentListenTask.setResponse(true);
+        callAgentListenTaskMap.remove(customer.getIndex());
     }
 }

@@ -12,6 +12,7 @@ public class ConferenceRoom {
 
     public static final int CALLSUCCESS = 1;
     public static final int CALLFAILED = -1;
+    public static final int CALLERROR = -2;
 
     // 1 call成功 0 call 失败
     private int callStatus;

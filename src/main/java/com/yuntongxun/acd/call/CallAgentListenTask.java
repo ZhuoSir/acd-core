@@ -8,6 +8,7 @@ public class CallAgentListenTask implements Runnable {
     private int timeout;
     private ConferenceRoom conferenceRoom;
     private boolean isResponse;
+    private boolean isInValidEnd = false;
     private ResponseCallBack responseCallBack;
 
 
@@ -21,6 +22,10 @@ public class CallAgentListenTask implements Runnable {
         isResponse = response;
     }
 
+    public void setInValidEnd(boolean inValidEnd) {
+        isInValidEnd = inValidEnd;
+    }
+
     public ConferenceRoom getConferenceRoom() {
         return conferenceRoom;
     }
@@ -31,22 +36,30 @@ public class CallAgentListenTask implements Runnable {
 
     @Override
     public void run() {
+        if (isInValidEnd) {
+            return;
+        }
         String threadName = "CallAgentListenTask[" + conferenceRoom.getCustomer().getIndex() + "-" + conferenceRoom.getAgent().getAgentId() + "]";
 
         Thread.currentThread().setName(threadName);
         try {
             System.out.println(threadName + "is listenning " + timeout + "S");
+            if (isInValidEnd)
+                return;
+
             Thread.sleep(timeout * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         System.out.println(threadName + " has stopped ");
-        if (responseCallBack != null) {
-            if (!isResponse) {
-                responseCallBack.notresponsed(conferenceRoom);
-            } else {
-                responseCallBack.responsed(conferenceRoom);
+        if (!isInValidEnd) {
+            if (responseCallBack != null) {
+                if (!isResponse) {
+                    responseCallBack.notresponsed(conferenceRoom);
+                } else {
+                    responseCallBack.responsed(conferenceRoom);
+                }
             }
         }
     }

@@ -89,7 +89,7 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
                 if (null == element) {
                     element = priorityQueue.poll();
                     if (null == element) {
-                        element = waitingQueue.poll(2, TimeUnit.SECONDS);
+                        element = waitingQueue.poll();
                     }
                 }
 

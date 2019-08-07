@@ -20,6 +20,7 @@ public class CallAgentTask implements Runnable {
     public static int SUCCESS = 1;
     public static int FAILED = 0;
     public static int NONEXECUTED = -1;
+    public static int EXECUEDERROR = -2;
 
     private Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
 
@@ -80,15 +81,16 @@ public class CallAgentTask implements Runnable {
 
     @Override
     public void run() {
-
         Thread.currentThread().setUncaughtExceptionHandler(uncaughtExceptionHandler);
         Thread.currentThread().setName("CallAgentTask[" + conferenceRoom.getCustomer().index() + "," + conferenceRoom.getAgent().getAgentId() + "]");
+
         taskStartTime = new Date();
         conferenceRoom.setCallDate(taskStartTime);
         CallResult callResult = null;
         try {
             callResult = callAgentAction.callAgent(conferenceRoom.getCustomer(), conferenceRoom.getAgent());
         } catch (Exception e) {
+            status = EXECUEDERROR;
             callAgentResultHandle.callError(conferenceRoom, e);
         }
 

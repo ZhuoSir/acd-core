@@ -66,7 +66,7 @@ public class CallAgentManager implements CallAgentResultHandle, Thread.UncaughtE
 
     @Override
     public void callError(ConferenceRoom conferenceRoom, Exception e) {
-        conferenceRoom.setCallStatus(ConferenceRoom.CALLFAILED);
+        conferenceRoom.setCallStatus(ConferenceRoom.CALLERROR);
         failedList.add(new CallFailedDetail(conferenceRoom, e));
         callAgentTaskPools.remove(conferenceRoom.getCustomer().index());
         if (lastOneCallAgentResultHandle != null) {

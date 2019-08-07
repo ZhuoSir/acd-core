@@ -11,7 +11,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class BlockingQueueAgentDistributor extends AbstractAgentDistributor {
 
+    // 坐席分配队列
     private BlockingQueue<Agent> agentQueue;
+
+    // 坐席表
     private Map<String, Agent> agentMap;
 
     public BlockingQueueAgentDistributor() {
@@ -24,6 +27,7 @@ public class BlockingQueueAgentDistributor extends AbstractAgentDistributor {
         try {
             Agent agent = agentQueue.take();
             agent.setStatus(Agent.BUSY);
+            agentMap.remove(agent.getAccount());
             return agent;
         } catch (InterruptedException e) {
             e.printStackTrace();
