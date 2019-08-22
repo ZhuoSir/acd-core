@@ -7,7 +7,7 @@ public interface CallAgentAction {
 
     CallResult callAgent(Customer customer, Agent agent);
 
-    void callFinish(Agent agent);
+    void callFinish(Customer customer, Agent agent);
 
     void callCancel(Agent agent);
 }

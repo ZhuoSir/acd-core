@@ -38,6 +38,11 @@ public class AgentManager {
         agentDistribute.removeAgent(account);
     }
 
+    public void dismissConferenceRoom(ConferenceRoom conferenceRoom) {
+//        putAgentQueue(conferenceRoom.getAgent());
+        conferenceRoomPool.remove(conferenceRoom.getCustomer().getAccount());
+    }
+
     public Collection<Agent> getAgents() {
         return agentDistribute.agentList();
     }

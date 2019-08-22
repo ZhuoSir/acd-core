@@ -19,6 +19,8 @@ public class CallAgentManager implements CallAgentResultHandle, Thread.UncaughtE
 
     private CallAgentResultHandle lastOneCallAgentResultHandle;
 
+    private AgentManager agentManager;
+
     public String createCallTask(ConferenceRoom conferenceRoom, CallAgentAction callAgentAction, CallAgentCallBack callAgentCallBack) {
         CallAgentTask callAgentTask = new CallAgentTask(conferenceRoom, callAgentAction, callAgentCallBack, this);
         callAgentTaskPools.put(callAgentTask.getCustomerId(), callAgentTask);
@@ -59,6 +61,8 @@ public class CallAgentManager implements CallAgentResultHandle, Thread.UncaughtE
         conferenceRoom.setCallStatus(ConferenceRoom.CALLFAILED);
         failedList.add(new CallFailedDetail(conferenceRoom));
         callAgentTaskPools.remove(conferenceRoom.getCustomer().index());
+        if (agentManager != null)
+            agentManager.dismissConferenceRoom(conferenceRoom);
         if (lastOneCallAgentResultHandle != null) {
             lastOneCallAgentResultHandle.callFailed(conferenceRoom);
         }
@@ -69,6 +73,8 @@ public class CallAgentManager implements CallAgentResultHandle, Thread.UncaughtE
         conferenceRoom.setCallStatus(ConferenceRoom.CALLERROR);
         failedList.add(new CallFailedDetail(conferenceRoom, e));
         callAgentTaskPools.remove(conferenceRoom.getCustomer().index());
+        if (agentManager != null)
+            agentManager.dismissConferenceRoom(conferenceRoom);
         if (lastOneCallAgentResultHandle != null) {
             lastOneCallAgentResultHandle.callError(conferenceRoom, e);
         }
@@ -87,5 +93,9 @@ public class CallAgentManager implements CallAgentResultHandle, Thread.UncaughtE
         if (e instanceof CallAgentException) {
             e.printStackTrace();
         }
+    }
+
+    public void setAgentManager(AgentManager agentManager) {
+        this.agentManager = agentManager;
     }
 }

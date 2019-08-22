@@ -18,11 +18,13 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     public AbstractCallAgentProxy() {
         agentManager = new AgentManager();
         callAgentManager = new CallAgentManager();
+        callAgentManager.setAgentManager(agentManager);
     }
 
     public AbstractCallAgentProxy(List<Agent> agents) {
         agentManager = new AgentManager();
         callAgentManager = new CallAgentManager();
+        callAgentManager.setAgentManager(agentManager);
         if (agents != null) {
             agentManager.putAgentQueue(agents);
         }
@@ -60,8 +62,10 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     }
 
     @Override
-    public void callFinish(Agent agent) {
+    public void callFinish(Customer customer, Agent agent) {
         agentManager.putAgentQueue(agent);
+        ConferenceRoom conferenceRoom = agentManager.distributeAgent(customer);
+        agentManager.dismissConferenceRoom(conferenceRoom);
     }
 
     @Override

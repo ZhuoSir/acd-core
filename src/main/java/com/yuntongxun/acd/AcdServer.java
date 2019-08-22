@@ -102,6 +102,10 @@ public class AcdServer {
         callAgentService.removeAgent(account);
     }
 
+    public void callFinish(Customer customer, Agent agent) {
+        callAgentService.callFinish(customer, agent);
+    }
+
     public List<CallFailedDetail> getFailedCallAgent() {
         if (null == callAgentService) return null;
         return callAgentService.getFailedCallAgentList();

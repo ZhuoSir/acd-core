@@ -37,10 +37,10 @@ public class CallAgentService extends AbstractCallAgentService {
 //            reject(customer.index());
 ////            builder.callDate(new Date()).failed(agent + " reject...").build();
 //        }
-        agree(customer.index());
-        callFinish(agent);
+//        agree(customer.index());
+        callFinish(customer, agent);
 
-        return builder.callDate(new Date()).success().build();
+        return builder.callDate(new Date()).failed().build();
 //        return null;
 
     }

@@ -128,20 +128,23 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
 
     @Override
     public void callSuccess(ConferenceRoom conferenceRoom) {
-        this.processFinish(conferenceRoom.getCustomer());
+//        this.processFinish(conferenceRoom.getCustomer());
     }
 
     @Override
     public void callFailed(ConferenceRoom conferenceRoom) {
-        this.processFinish(conferenceRoom.getCustomer());
-        this.lineFailed(conferenceRoom.getCustomer());
+        Customer customer =conferenceRoom.getCustomer();
+        this.lineFailed(customer);
+        CallAgentListenTask callAgentListenTask = callAgentListenTaskMap.get(customer.getIndex());
+        callAgentListenTask.setInValidEnd(true);
+        callAgentListenTaskMap.remove(customer.getIndex());
     }
 
     @Override
     public void callError(ConferenceRoom conferenceRoom, Exception e) {
         Customer customer = conferenceRoom.getCustomer();
         CallAgentListenTask callAgentListenTask = callAgentListenTaskMap.get(customer.getIndex());
-        callAgentListenTask.setResponse(true);
+        callAgentListenTask.setInValidEnd(true);
         callAgentListenTaskMap.remove(customer.getIndex());
     }
 }
