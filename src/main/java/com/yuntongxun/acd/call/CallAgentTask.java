@@ -1,7 +1,6 @@
 package com.yuntongxun.acd.call;
 
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
-import com.yuntongxun.acd.call.CallAgentException;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
 
 import java.util.Date;
 

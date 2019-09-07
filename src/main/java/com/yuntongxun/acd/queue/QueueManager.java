@@ -19,5 +19,5 @@ public interface QueueManager {
 
     void processFinish(LineElement element);
 
-    void queueNotify();
+    void queueAdjust(boolean isNotify);
 }

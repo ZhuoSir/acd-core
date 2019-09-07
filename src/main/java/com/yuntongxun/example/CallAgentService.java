@@ -1,6 +1,6 @@
 package com.yuntongxun.example;
 
-import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.Agent;
 import com.yuntongxun.acd.call.CallResult;
 import com.yuntongxun.acd.queue.bean.Customer;
 import com.yuntongxun.acd.queue.notification.QueueNotification;

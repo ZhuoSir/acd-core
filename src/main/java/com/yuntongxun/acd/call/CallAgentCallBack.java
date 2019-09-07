@@ -1,6 +1,6 @@
 package com.yuntongxun.acd.call;
 
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
 
 public interface CallAgentCallBack {
 

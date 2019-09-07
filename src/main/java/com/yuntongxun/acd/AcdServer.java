@@ -1,8 +1,8 @@
 package com.yuntongxun.acd;
 
-import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.Agent;
 import com.yuntongxun.acd.call.CallFailedDetail;
-import com.yuntongxun.acd.call.distribution.AgentDistribute;
+import com.yuntongxun.acd.distribution.AgentDistribute;
 import com.yuntongxun.acd.queue.AcdQueue;
 import com.yuntongxun.acd.queue.CustomerQueueManager;
 import com.yuntongxun.acd.queue.bean.Customer;
@@ -11,7 +11,6 @@ import com.yuntongxun.acd.queue.bean.LineElementInfo;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,15 +28,25 @@ public class AcdServer {
 
     private Map<String, Customer> customerMap = new ConcurrentHashMap<>();
 
+    private boolean callSwitch = false;
+
+    public AcdServer() {
+        init();
+    }
+
     public void init() {
         acdQueue = new AcdQueue();
         customerQueueManager = new CustomerQueueManager();
         customerQueueManager.setAcdQueue(acdQueue);
         if (callAgentService != null) {
             customerQueueManager.setQueueNotifyProxy(callAgentService);
-            customerQueueManager.setCallAgentCallBackProxy(callAgentService);
-            customerQueueManager.setCallAgentProxy(callAgentService);
-            callAgentService.setCallAgentResultHandle(customerQueueManager);
+            customerQueueManager.setAgentDistributeProxy(callAgentService);
+            if (callSwitch) {
+                customerQueueManager.setCallAgentCallBackProxy(callAgentService);
+                customerQueueManager.setCallAgentProxy(callAgentService);
+                callAgentService.setCallAgentResultHandle(customerQueueManager);
+            }
+
         }
         if (notify == 1)
             customerQueueManager.notifySwitchOn();
@@ -121,12 +130,19 @@ public class AcdServer {
 
     public void setCallAgentService(AbstractCallAgentService callAgentService) {
         this.callAgentService = callAgentService;
-        if (customerQueueManager != null) {
+        if (callAgentService != null) {
             customerQueueManager.setQueueNotifyProxy(callAgentService);
-            customerQueueManager.setCallAgentCallBackProxy(callAgentService);
-            customerQueueManager.setCallAgentProxy(callAgentService);
-            callAgentService.setCallAgentResultHandle(customerQueueManager);
+            customerQueueManager.setAgentDistributeProxy(callAgentService);
+            if (callSwitch) {
+                customerQueueManager.setCallAgentCallBackProxy(callAgentService);
+                customerQueueManager.setCallAgentProxy(callAgentService);
+                callAgentService.setCallAgentResultHandle(customerQueueManager);
+            }
         }
+    }
+
+    public void setCallSwitch(boolean callSwitch) {
+        this.callSwitch = callSwitch;
     }
 
     public void setNotify(int notify) {

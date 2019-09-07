@@ -1,6 +1,6 @@
 package com.yuntongxun.acd.queue.notification;
 
-import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.LineElement;
 
 import java.util.Date;

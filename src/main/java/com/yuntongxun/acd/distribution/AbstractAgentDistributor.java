@@ -1,4 +1,4 @@
-package com.yuntongxun.acd.call.distribution;
+package com.yuntongxun.acd.distribution;
 
 public abstract class AbstractAgentDistributor implements AgentDistribute {
 

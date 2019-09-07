@@ -1,8 +1,9 @@
 package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.call.*;
-import com.yuntongxun.acd.call.Agent.Agent;
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.AgentDistributeProxy;
 import com.yuntongxun.acd.queue.bean.Customer;
 import com.yuntongxun.acd.queue.bean.LineElement;
 import com.yuntongxun.acd.queue.notification.QueueNotification;
@@ -21,36 +22,43 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
     private CallAgentProxy callAgentProxy;
     private CallAgentCallBackProxy callAgentCallBackProxy;
     private QueueNotifyProxy queueNotifyProxy;
+    private AgentDistributeProxy agentDistributeProxy;
+
 
     private ExecutorService taskPool;
-    private final int callListenTimeout = 10;
+    private final int CALLLISTENDEFAULTTIMEOUT = 10;
     private Map<String, CallAgentListenTask> callAgentListenTaskMap = new ConcurrentHashMap<>();
+
+    private int callListenTimeout;
 
     public CustomerQueueManager() {
         taskPool = Executors.newCachedThreadPool();
+        this.callListenTimeout = CALLLISTENDEFAULTTIMEOUT;
     }
 
     @Override
     public Agent workAfterLine(LineElement element) {
         Agent agent = null;
-        Customer customer = (Customer) element;
-        if (null != callAgentProxy) {
-            ConferenceRoom conferenceRoom = callAgentProxy.call(customer, this);
+        Customer customer = (Customer) element ;
+        ConferenceRoom conferenceRoom = agentDistributeProxy.distributeConference(customer);
+        agent = conferenceRoom.getAgent();
+        if (callAgentProxy != null) {
+            callAgentProxy.call(conferenceRoom, this);
             CallAgentListenTask callAgentListenTask = new CallAgentListenTask(callListenTimeout, conferenceRoom, new CallAgentListenTask.ResponseCallBack() {
-                @Override
-                public void responsed(ConferenceRoom conferenceRoom) {
-                    System.out.println("responsed");
-                }
 
-                @Override
-                public void notresponsed(ConferenceRoom conferenceRoom) {
-                    callAgentProxy.callCancel(conferenceRoom);
-                    lineFailed(conferenceRoom.getCustomer());
-                }
-            });
+                    @Override
+                    public void responsed(ConferenceRoom conferenceRoom) {
+                        System.out.println("responsed");
+                    }
+
+                    @Override
+                    public void notresponsed(ConferenceRoom conferenceRoom) {
+                        callAgentProxy.callCancel(conferenceRoom);
+                        lineFailed(conferenceRoom.getCustomer());
+                    }
+                });
             callAgentListenTaskMap.put(customer.getIndex(), callAgentListenTask);
             taskPool.submit(callAgentListenTask);
-            agent = conferenceRoom.getAgent();
         }
         return agent;
     }
@@ -93,8 +101,7 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
     }
 
     @Override
-    public void queueNotify(AcdQueue acdQueue) {
-        if (null == queueNotifyProxy) return;
+    public void queueAdjust(boolean isNotify, AcdQueue acdQueue) {
         Queue<LineElement> waitingQueue = acdQueue.getWaitingQueue();
         Iterator<LineElement> iterator = waitingQueue.iterator();
         taskPool.submit(new Runnable() {
@@ -104,13 +111,15 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
                 while (iterator.hasNext()) {
                     LineElement lineElement = iterator.next();
                     lineElement.setWaitingCount(preCount);
-                    QueueNotification queueNotification = new QueueNotification(lineElement, preCount, new Date(), 0);
-                    taskPool.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            queueNotifyProxy.sendNotification(queueNotification);
-                        }
-                    });
+                    if (isNotify && queueNotifyProxy != null) {
+                        QueueNotification queueNotification = new QueueNotification(lineElement, preCount, new Date(), 0);
+                        taskPool.submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                queueNotifyProxy.sendNotification(queueNotification);
+                            }
+                        });
+                    }
                     preCount++;
                 }
             }
@@ -128,7 +137,7 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
 
     @Override
     public void callSuccess(ConferenceRoom conferenceRoom) {
-//        this.processFinish(conferenceRoom.getCustomer());
+//        this.processFinish(conferenceRoom.getCustomer()) ;
     }
 
     @Override
@@ -146,5 +155,15 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
         CallAgentListenTask callAgentListenTask = callAgentListenTaskMap.get(customer.getIndex());
         callAgentListenTask.setInValidEnd(true);
         callAgentListenTaskMap.remove(customer.getIndex());
+    }
+
+    public void setCallListenTimeout(int callListenTimeout) {
+        if (callListenTimeout > 0) {
+            this.callListenTimeout = callListenTimeout;
+        }
+    }
+
+    public void setAgentDistributeProxy(AgentDistributeProxy agentDistributeProxy) {
+        this.agentDistributeProxy = agentDistributeProxy;
     }
 }

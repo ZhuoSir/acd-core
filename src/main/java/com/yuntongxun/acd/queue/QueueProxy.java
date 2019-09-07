@@ -1,15 +1,15 @@
 package com.yuntongxun.acd.queue;
 
-import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.LineElement;
 
 public interface QueueProxy {
 
     /**
-     * 队列通知
+     * 队列调整
      *
      * */
-    void queueNotify(AcdQueue acdQueue);
+    void queueAdjust(boolean isNotify, AcdQueue acdQueue);
 
     /**
      * 分配通知

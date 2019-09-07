@@ -1,7 +1,7 @@
 package com.yuntongxun.acd.call;
 
-import com.yuntongxun.acd.call.Agent.Agent;
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
 import com.yuntongxun.acd.queue.bean.Customer;
 
 import java.util.Date;

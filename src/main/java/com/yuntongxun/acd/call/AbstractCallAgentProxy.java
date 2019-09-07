@@ -1,16 +1,16 @@
 package com.yuntongxun.acd.call;
 
-import com.yuntongxun.acd.call.Agent.Agent;
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
-import com.yuntongxun.acd.call.distribution.AgentDistribute;
+import com.yuntongxun.acd.distribution.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.AgentDistribute;
+import com.yuntongxun.acd.distribution.AgentDistributeProxy;
+import com.yuntongxun.acd.distribution.AgentManager;
 import com.yuntongxun.acd.queue.bean.Customer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
-public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAgentAction {
+public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAgentAction, AgentDistributeProxy {
 
     protected AgentManager agentManager;
     protected CallAgentManager callAgentManager;
@@ -47,13 +47,10 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     }
 
     @Override
-    public ConferenceRoom call(Customer customer, CallAgentCallBack callAgentCallBack) {
-
-        ConferenceRoom conferenceRoom = agentManager.distributeAgent(customer);
+    public void call(ConferenceRoom conferenceRoom, CallAgentCallBack callAgentCallBack) {
         if (null != conferenceRoom) {
             callAgentManager.createCallTask(conferenceRoom, this, callAgentCallBack);
         }
-        return conferenceRoom;
     }
 
     @Override
@@ -83,5 +80,12 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
 
     public void setAgentDistributor(AgentDistribute agentDistributor) {
         agentManager.setAgentDistribute(agentDistributor);
+    }
+
+    @Override
+    public ConferenceRoom distributeConference(Customer customer) {
+        ConferenceRoom conferenceRoom = agentManager.distributeAgent(customer);
+        System.out.println("Customer distributed conferenceRoom : " + conferenceRoom);
+        return conferenceRoom;
     }
 }

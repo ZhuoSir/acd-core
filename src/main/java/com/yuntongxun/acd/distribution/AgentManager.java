@@ -1,9 +1,7 @@
-package com.yuntongxun.acd.call;
+package com.yuntongxun.acd.distribution;
 
-import com.yuntongxun.acd.call.Agent.Agent;
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
-import com.yuntongxun.acd.call.distribution.AgentDistribute;
-import com.yuntongxun.acd.call.distribution.BlockingQueueAgentDistributor;
+import com.yuntongxun.acd.distribution.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
 import com.yuntongxun.acd.queue.bean.Customer;
 
 import java.util.Collection;

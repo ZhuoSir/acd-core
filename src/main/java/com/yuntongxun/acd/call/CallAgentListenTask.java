@@ -1,6 +1,6 @@
 package com.yuntongxun.acd.call;
 
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
 
 public class CallAgentListenTask implements Runnable {
 
@@ -43,16 +43,23 @@ public class CallAgentListenTask implements Runnable {
 
         Thread.currentThread().setName(threadName);
         try {
-            System.out.println(threadName + "is listenning " + timeout + "S");
-            if (isInValidEnd)
+            if (isInValidEnd) {
                 return;
+            } else {
+                if (responseCallBack != null) {
+                    if (!isResponse) {
+                        responseCallBack.notresponsed(conferenceRoom);
+                    } else {
+                        responseCallBack.responsed(conferenceRoom);
+                    }
+                }
+            }
 
             Thread.sleep(timeout * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        System.out.println(threadName + " has stopped ");
         if (!isInValidEnd) {
             if (responseCallBack != null) {
                 if (!isResponse) {

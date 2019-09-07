@@ -1,6 +1,6 @@
 package com.yuntongxun.example;
 
-import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.Customer;
 import com.yuntongxun.acd.queue.bean.LineElementInfo;
 import com.yuntongxun.acd.AbstractCallAgentService;
@@ -24,7 +24,6 @@ public class AcdMain {
         AcdServer acdServer = new AcdServer();
         acdServer.setCallAgentService(callAgentService);
         acdServer.setNotify(1);
-        acdServer.init();
         acdServer.start();
 
         for (int i = 0; i < 30; i++) {

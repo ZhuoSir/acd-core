@@ -1,6 +1,6 @@
-package com.yuntongxun.acd.call.distribution;
+package com.yuntongxun.acd.distribution;
 
-import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.Agent;
 import com.yuntongxun.acd.queue.bean.Customer;
 
 import java.util.Collection;

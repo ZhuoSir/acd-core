@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.call;
 
-import com.yuntongxun.acd.call.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
+import com.yuntongxun.acd.distribution.AgentManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +9,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class CallAgentManager implements CallAgentResultHandle, Thread.UncaughtExceptionHandler {
 
-    private ExecutorService callTaskPools = Executors.newFixedThreadPool(20);
+    private ExecutorService callTaskPools = Executors.newCachedThreadPool();
     private Map<String, CallAgentTask> callAgentTaskPools = new ConcurrentHashMap<>();
 
     private List<CallFailedDetail> failedList = new ArrayList<>();

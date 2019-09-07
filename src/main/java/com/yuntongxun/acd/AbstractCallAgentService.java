@@ -1,9 +1,8 @@
 package com.yuntongxun.acd;
 
 import com.yuntongxun.acd.call.AbstractCallAgentProxy;
-import com.yuntongxun.acd.call.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.Agent;
 import com.yuntongxun.acd.call.CallAgentCallBackProxy;
-import com.yuntongxun.acd.call.CallAgentResultHandle;
 import com.yuntongxun.acd.queue.notification.QueueNotifyProxy;
 
 import java.util.List;
