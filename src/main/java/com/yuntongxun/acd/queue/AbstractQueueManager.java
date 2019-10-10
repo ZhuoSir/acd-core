@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.distribution.Agent.Agent;
+import com.yuntongxun.acd.distribution.Agent.ConferenceRoom;
 import com.yuntongxun.acd.queue.bean.LineElement;
 import com.yuntongxun.acd.queue.bean.LineElementInfo;
 
@@ -78,6 +79,9 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
     @Override
     public void lineProcess() {
         try {
+
+            Agent agent = getAgentBeforeWork();
+
             for (;;) {
                 AcdQueue acdQueue = getAcdQueue();
                 BlockingQueue<LineElement> waitingQueue  = acdQueue.getWaitingQueue();
@@ -94,7 +98,7 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
 
                 if (null != element) {
                     queueAdjust(notifySwitch);
-                    Agent agent = workAfterLine(element);
+                    ConferenceRoom conferenceRoom = workAfterLine(agent, element);
                     if (agent != null) {
                         queueProxy.distributeNotify(element, agent);
                     }
@@ -106,5 +110,7 @@ public abstract class AbstractQueueManager extends Thread implements QueueManage
 
     }
 
-    public abstract Agent workAfterLine(LineElement element);
+    public abstract ConferenceRoom workAfterLine(Agent agent, LineElement element);
+
+    public abstract Agent getAgentBeforeWork();
 }

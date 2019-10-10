@@ -36,7 +36,7 @@ public class AcdMain {
             Customer customer = new Customer(i);
             customer.setAccount("ceshi" + i);
             LineElementInfo lineElementInfo = acdServer.line(customer);
-//            System.out.println(lineElementInfo);
+            System.out.println(lineElementInfo);
         }
     }
 

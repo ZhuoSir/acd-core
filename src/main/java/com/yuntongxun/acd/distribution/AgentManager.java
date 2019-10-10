@@ -59,4 +59,15 @@ public class AgentManager {
         }
         return null;
     }
+
+    public ConferenceRoom distributeConferenceRoom(Agent agent, Customer customer) {
+        ConferenceRoom conferenceRoom = new ConferenceRoom(agent, customer);
+        conferenceRoomPool.put(customer.index(), conferenceRoom);
+        return conferenceRoom;
+    }
+
+    public Agent distributeAgent() {
+        Agent agent = agentDistribute.distribute();
+        return agent;
+    }
 }

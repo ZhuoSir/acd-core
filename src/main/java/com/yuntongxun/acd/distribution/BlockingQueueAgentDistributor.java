@@ -23,6 +23,11 @@ public class BlockingQueueAgentDistributor extends AbstractAgentDistributor {
     }
 
     @Override
+    public Agent distribute() {
+        return distribute(null);
+    }
+
+    @Override
     public Agent distribute(Customer customer) {
         try {
             Agent agent = agentQueue.take();

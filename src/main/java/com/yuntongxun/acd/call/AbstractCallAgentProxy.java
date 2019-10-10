@@ -83,9 +83,18 @@ public abstract class  AbstractCallAgentProxy implements CallAgentProxy, CallAge
     }
 
     @Override
-    public ConferenceRoom distributeConference(Customer customer) {
-        ConferenceRoom conferenceRoom = agentManager.distributeAgent(customer);
-        System.out.println("Customer distributed conferenceRoom : " + conferenceRoom);
+    public ConferenceRoom distributeConference(Agent agent, Customer customer) {
+        ConferenceRoom conferenceRoom = null;
+        if (agent == null) {
+            conferenceRoom = agentManager.distributeAgent(customer);
+        } else {
+            conferenceRoom = agentManager.distributeConferenceRoom(agent, customer);
+        }
         return conferenceRoom;
+    }
+
+    @Override
+    public Agent distributeAgent() {
+        return agentManager.distributeAgent();
     }
 }

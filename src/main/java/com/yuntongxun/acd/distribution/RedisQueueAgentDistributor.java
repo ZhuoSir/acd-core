@@ -8,6 +8,11 @@ import java.util.Collection;
 public class RedisQueueAgentDistributor extends AbstractAgentDistributor {
 
     @Override
+    public Agent distribute() {
+        return null;
+    }
+
+    @Override
     public Agent distribute(Customer customer) {
         return null;
     }

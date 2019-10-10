@@ -7,6 +7,8 @@ import java.util.Collection;
 
 public interface AgentDistribute {
 
+    Agent distribute();
+
     Agent distribute(Customer customer);
 
     void addAgent(Agent agent);

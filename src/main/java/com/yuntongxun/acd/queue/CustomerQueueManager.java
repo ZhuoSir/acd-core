@@ -37,10 +37,14 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
     }
 
     @Override
-    public Agent workAfterLine(LineElement element) {
-        Agent agent = null;
+    public Agent getAgentBeforeWork() {
+        return agentDistributeProxy.distributeAgent();
+    }
+
+    @Override
+    public ConferenceRoom workAfterLine(Agent agent, LineElement element) {
         Customer customer = (Customer) element ;
-        ConferenceRoom conferenceRoom = agentDistributeProxy.distributeConference(customer);
+        ConferenceRoom conferenceRoom = agentDistributeProxy.distributeConference(agent, customer);
         agent = conferenceRoom.getAgent();
         if (callAgentProxy != null) {
             callAgentProxy.call(conferenceRoom, this);
@@ -60,7 +64,7 @@ public class CustomerQueueManager extends AbstractQueueManager implements CallAg
             callAgentListenTaskMap.put(customer.getIndex(), callAgentListenTask);
             taskPool.submit(callAgentListenTask);
         }
-        return agent;
+        return conferenceRoom;
     }
 
     public void setCallAgentProxy(CallAgentProxy callAgentProxy) {

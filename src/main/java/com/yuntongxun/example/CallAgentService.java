@@ -57,10 +57,10 @@ public class CallAgentService extends AbstractCallAgentService {
 
     @Override
     public void sendNotification(QueueNotification queueNotification) {
-//        if (queueNotification.getLineStatus() == 0) {
-//            System.out.println(" queue has changed Customer : " + ((Customer)queueNotification.getLineElement()).index() + " precount : " + queueNotification.getPreCount());
-//        } else {
-//            System.out.println(" customer : " + ((Customer)queueNotification.getLineElement()).index() + " has distributed agent: " + queueNotification.getDistributedAgent().getAgentId());
-//        }
+        if (queueNotification.getLineStatus() == 0) {
+            System.out.println(" queue has changed Customer : " + ((Customer)queueNotification.getLineElement()).index() + " precount : " + queueNotification.getPreCount());
+        } else {
+            System.out.println(" customer : " + ((Customer)queueNotification.getLineElement()).index() + " has distributed agent: " + queueNotification.getDistributedAgent().getAgentId());
+        }
     }
 }
